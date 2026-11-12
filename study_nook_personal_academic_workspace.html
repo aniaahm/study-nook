@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Nook — Your little corner of academia</title>
+  <!-- Google Fonts: Instrument Serif, DM Sans, Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FFF9F2',
+            'soft-pink': '#F5DDE4',
+            blush: '#EBC5D1',
+            sage: '#A9B99D',
+            'muted-green': '#788C73',
+            'dark-olive': '#465343',
+            'warm-brown': '#78675D',
+            ink: '#49433F',
+          },
+          fontFamily: {
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            hand: ['"Caveat"', 'cursive'],
+          },
+          boxShadow: {
+            paper: '0 6px 24px -4px rgba(73, 67, 63, 0.06), 0 1px 3px rgba(73, 67, 63, 0.04)',
+            'paper-hover': '0 12px 30px -6px rgba(73, 67, 63, 0.11)',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --cream: #FFF9F2;
+      --soft-pink: #F5DDE4;
+      --blush: #EBC5D1;
+      --sage: #A9B99D;
+      --muted-green: #788C73;
+      --dark-olive: #465343;
+      --warm-brown: #78675D;
+      --ink: #49433F;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background-image:
+        radial-gradient(rgba(169, 185, 157, 0.22) 1px, transparent 1px),
+        radial-gradient(rgba(235, 197, 209, 0.25) 1px, transparent 1px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      overflow-x: hidden;
+    }
+
+    /* Cute Cafe / Stationery Striped Ribbon Border */
+    .awning-stripes {
+      background-image: repeating-linear-gradient(
+        90deg,
+        #465343 0px,
+        #465343 16px,
+        #F5DDE4 16px,
+        #F5DDE4 32px
+      );
+    }
+
+    .awning-stripes-pastel {
+      background-image: repeating-linear-gradient(
+        90deg,
+        #A9B99D 0px,
+        #A9B99D 14px,
+        #FFF9F2 14px,
+        #FFF9F2 28px
+      );
+    }
+
+    /* Washi Tape Accent */
+    .washi-pink {
+      position: relative;
+    }
+    .washi-pink::before {
+      content: '';
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1.5deg);
+      width: 72px;
+      height: 18px;
+      background: rgba(235, 197, 209, 0.78);
+      border-left: 2px dashed rgba(255, 255, 255, 0.65);
+      border-right: 2px dashed rgba(255, 255, 255, 0.65);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Paper Tints */
+    .tint-cream { background-color: #FFFDF9; border-color: #E6DDD0; }
+    .tint-pink  { background-color: #FFF7FA; border-color: #EBC5D1; }
+    .tint-sage  { background-color: #F7FAF6; border-color: #A9B99D; }
+
+    /* Clean Print Stylesheet */
+    @media print {
+      body * { visibility: hidden !important; }
+      #print-sheet-target, #print-sheet-target * { visibility: visible !important; }
+      #print-sheet-target {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        padding: 16mm !important;
+        background: #FFFFFF !important;
+        z-index: 99999 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-soft-pink selection:text-ink">
+
+  <!-- Gentle Floating Toast -->
+  <div id="toast-box" class="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-[90] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Stationery Awning Ribbon -->
+  <div class="h-2.5 w-full awning-stripes shrink-0"></div>
+
+  <!-- Clean, Airy Top Bar -->
+  <header class="sticky top-0 z-30 bg-[#FFFDF9]/95 backdrop-blur border-b border-[#EAE0D5]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+      <!-- Brand Logo & Title -->
+      <button onclick="go('home')" class="flex items-center gap-3 text-left group min-w-0">
+        <div class="w-10 h-10 rounded-2xl bg-soft-pink border border-blush flex items-center justify-center shrink-0 group-hover:rotate-3 transition-transform">
+          <svg class="w-5 h-5 text-dark-olive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-linecap="round"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <path d="M12 2v6.5l-2-1.5-2 1.5V2" fill="#EBC5D1" stroke="#465343"/>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <span id="header-title" class="font-serif text-2xl sm:text-[26px] text-dark-olive leading-none block truncate">Study Nook</span>
+          <span id="header-tagline" class="font-hand text-base text-warm-brown leading-none block mt-0.5 truncate">Your little corner of academia.</span>
+        </div>
+      </button>
+
+      <!-- Desktop 4 Pill Tabs -->
+      <nav class="hidden md:flex items-center gap-1.5 bg-cream p-1.5 rounded-full border border-[#E6DDD0]" aria-label="Primary">
+        <button onclick="go('home')" data-tab="home" class="tab-pill px-4 py-1.5 rounded-full text-sm font-medium transition-all">Home</button>
+        <button onclick="go('planners')" data-tab="planners" class="tab-pill px-4 py-1.5 rounded-full text-sm font-medium transition-all">Planners</button>
+        <button onclick="go('binder')" data-tab="binder" class="tab-pill px-4 py-1.5 rounded-full text-sm font-medium transition-all">Binder</button>
+        <button onclick="go('archive')" data-tab="archive" class="tab-pill px-4 py-1.5 rounded-full text-sm font-medium transition-all">Archive</button>
+      </nav>
+
+      <!-- Right Controls: Gear (Owner Only) + Owner Lock/Unlock Pill -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="gear-btn" onclick="openCloudDrawer()" class="hidden p-2.5 rounded-full bg-cream hover:bg-soft-pink/50 border border-[#E6DDD0] text-dark-olive transition-colors" title="Cloud Sync & Settings" aria-label="Settings">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+
+        <button id="owner-pill-btn" onclick="handleOwnerPill()"
+          class="px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all shadow-xs bg-soft-pink/80 hover:bg-soft-pink border border-blush text-dark-olive">
+          <span id="owner-pill-icon">🔒</span>
+          <span id="owner-pill-text">Owner Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container (Short, Cozy Width) -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-24 md:pb-12">
+    <div id="view-root"></div>
+  </main>
+
+  <!-- Mobile Bottom Pill Bar -->
+  <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-[#FFFDF9]/95 backdrop-blur border-t border-[#EAE0D5] px-3 py-2 flex items-center justify-around">
+    <button onclick="go('home')" data-tab="home" class="tab-pill-m flex flex-col items-center py-1 px-3 rounded-2xl text-xs font-medium">
+      <span>🏡</span><span>Home</span>
+    </button>
+    <button onclick="go('planners')" data-tab="planners" class="tab-pill-m flex flex-col items-center py-1 px-3 rounded-2xl text-xs font-medium">
+      <span>📖</span><span>Planners</span>
+    </button>
+    <button onclick="go('binder')" data-tab="binder" class="tab-pill-m flex flex-col items-center py-1 px-3 rounded-2xl text-xs font-medium">
+      <span>🎀</span><span>Binder</span>
+    </button>
+    <button onclick="go('archive')" data-tab="archive" class="tab-pill-m flex flex-col items-center py-1 px-3 rounded-2xl text-xs font-medium">
+      <span>📦</span><span>Archive</span>
+    </button>
+  </nav>
+
+  <!-- Popover / Modal Root -->
+  <div id="modal-root" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-ink/35 backdrop-blur-xs overflow-y-auto"></div>
+
+  <!-- Clean Print Area -->
+  <div id="print-sheet-target" class="hidden"></div>
+
+  <script>
+    // =========================================================================
+    // 1. CURATED 5 ADORABLE STARTER TEMPLATES (Simple, Fast, Fun)
+    // =========================================================================
+    const STARTER_TEMPLATES = [
+      {
+        id: 'daily-routine',
+        emoji: '☕',
+        name: 'Daily Cute Routine',
+        desc: 'Top 3 priorities, cozy time blocks, and a quick evening note.',
+        tint: 'cream',
+        blocks: [
+          { type: 'checklist', title: 'Top 3 Study Goals Today', items: [{ text: 'Review morning lecture notes', done: true }, { text: 'Finish practice questions', done: false }, { text: '30 mins flashcards before dinner', done: false }] },
+          { type: 'schedule', title: 'Study Time Blocks', rows: [{ time: '09:00 AM', label: 'Deep Focus Session' }, { time: '02:00 PM', label: 'Reading & Summaries' }, { time: '07:30 PM', label: 'Light Review & Desk Tidy' }] },
+          { type: 'note', title: 'Little Reflection', text: 'Keep water & tea nearby. One page at a time!' }
+        ]
+      },
+      {
+        id: 'weekly-grid',
+        emoji: '🎀',
+        name: 'Weekly Study Grid',
+        desc: 'Plan your week across subjects without feeling overwhelmed.',
+        tint: 'pink',
+        blocks: [
+          { type: 'schedule', title: 'This Week at a Glance', rows: [{ time: 'Mon / Tue', label: 'Lecture readings & margin notes' }, { time: 'Wed / Thu', label: 'Problem sets & lab prep' }, { time: 'Fri / Weekend', label: 'Weekly review & binder reset' }] },
+          { type: 'checklist', title: 'Weekly Must-Dos', items: [{ text: 'Submit Friday assignment on time', done: false }, { text: 'Organize class handouts into Binder', done: false }] }
+        ]
+      },
+      {
+        id: 'exam-countdown',
+        emoji: '✨',
+        name: 'Exam Countdown',
+        desc: 'Topic checklist + revision sprints for calm exam prep.',
+        tint: 'sage',
+        blocks: [
+          { type: 'checklist', title: 'Syllabus Topics to Master', items: [{ text: 'Chapter 1–2 Core Concepts', done: true }, { text: 'Chapter 3–4 Practice Problems', done: false }, { text: 'Complete 1 timed past paper', done: false }] },
+          { type: 'note', title: 'Key Formulas & Reminders', text: 'Focus on weak areas first, then do active recall from memory.' }
+        ]
+      },
+      {
+        id: 'assignment-list',
+        emoji: '🌿',
+        name: 'Assignment Checklist',
+        desc: 'Track homework, essays, and deadlines in one neat list.',
+        tint: 'pink',
+        blocks: [
+          { type: 'checklist', title: 'Homework & Deadlines', items: [{ text: 'Outline essay thesis & gather 5 sources', done: true }, { text: 'Write first draft (1,200 words)', done: false }, { text: 'Proofread & export final PDF', done: false }] }
+        ]
+      },
+      {
+        id: 'blank-sheet',
+        emoji: '📝',
+        name: 'Blank Notebook',
+        desc: 'A fresh cream page for whatever you want to jot down.',
+        tint: 'cream',
+        blocks: [
+          { type: 'note', title: 'Study Notes', text: 'Click here to start typing your notes...' }
+        ]
+      }
+    ];
+
+    const BINDER_CATEGORIES = ['Routine Photos', 'Class Notes', 'Schedules', 'Syllabus', 'Other'];
+
+    // =========================================================================
+    // 2. CLOUDFLARE WORKER + D1 + R2 CODE (Tucked inside Settings Drawer)
+    // =========================================================================
+    const CLOUDFLARE_CODE = {
+      sql: `-- Cloudflare D1 Schema (schema.sql)
+CREATE TABLE IF NOT EXISTS workspace (
+  id TEXT PRIMARY KEY DEFAULT 'main',
+  data_json TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);`,
+      worker: `// Cloudflare Worker (worker.js) — Bind D1 as DB & R2 as BUCKET
+// Secret: PASSCODE (default: studynook2026)
+export default {
+  async fetch(req, env) {
+    const url = new URL(req.url);
+    const cors = {
+      'Access-Control-Allow-Origin': req.headers.get('Origin') || '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+    if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+    const json = (d, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { 'Content-Type': 'application/json', ...cors } });
+
+    const isOwner = req.headers.get('Authorization') === 'Bearer ' + (env.PASSCODE || 'studynook2026');
+
+    if (url.pathname === '/api/sync' && req.method === 'GET') {
+      const row = await env.DB.prepare('SELECT data_json FROM workspace WHERE id = ?').bind('main').first();
+      if (!row) return json({ empty: true });
+      const data = JSON.parse(row.data_json);
+      if (!isOwner) {
+        data.planners = (data.planners || []).filter(p => p.visibility === 'PUBLIC');
+        data.documents = (data.documents || []).filter(d => d.visibility === 'PUBLIC');
+      }
+      return json(data);
+    }
+
+    if (url.pathname === '/api/sync' && req.method === 'POST') {
+      if (!isOwner) return json({ error: 'Unauthorized' }, 401);
+      const body = await req.text();
+      await env.DB.prepare('INSERT INTO workspace (id, data_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET data_json=excluded.data_json, updated_at=excluded.updated_at')
+        .bind('main', body, new Date().toISOString()).run();
+      return json({ ok: true });
+    }
+
+    if (url.pathname === '/api/upload' && req.method === 'POST') {
+      if (!isOwner) return json({ error: 'Unauthorized' }, 401);
+      const fd = await req.formData();
+      const file = fd.get('file');
+      const key = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      await env.BUCKET.put(key, file.stream(), { httpMetadata: { contentType: file.type } });
+      return json({ key, url: url.origin + '/api/file/' + encodeURIComponent(key) });
+    }
+
+    if (url.pathname.startsWith('/api/file/')) {
+      const key = decodeURIComponent(url.pathname.replace('/api/file/', ''));
+      const obj = await env.BUCKET.get(key);
+      if (!obj) return new Response('Not found', { status: 404 });
+      const h = new Headers(cors);
+      obj.writeHttpMetadata(h);
+      return new Response(obj.body, { headers: h });
+    }
+
+    return json({ error: 'Not found' }, 404);
+  }
+};`
+    };
+
+    // =========================================================================
+    // 3. STATE & STORAGE (Zero-friction Local + Optional Live Cloudflare Sync)
+    // =========================================================================
+    const STORE_KEY = 'studynook_simple_v2';
+    const AUTH_KEY = 'studynook_owner_v2';
+
+    let state = {
+      tab: 'home', // 'home' | 'planners' | 'binder' | 'archive'
+      isOwner: false,
+      editingPlannerId: null,
+      viewingPlannerId: null,
+      plannerSearch: '',
+      binderCategory: 'ALL',
+      binderSearch: '',
+      saveLabel: 'Saved ✓',
+      settings: {
+        title: 'Study Nook',
+        tagline: 'Your little corner of academia.',
+        session: 'Autumn / Fall 2026',
+        focusNote: 'Finish biology summary cards & review French vocab with a warm cup of tea ✨',
+        passcode: 'studynook2026',
+        workerUrl: ''
+      },
+      planners: [],
+      documents: []
+    };
+
+    function seedCuteStarterData() {
+      const today = new Date().toISOString().slice(0, 10);
+      const nextWeek = new Date(Date.now() + 9 * 86400000).toISOString().slice(0, 10);
+
+      // Cute Routine Card SVG Data URL so the user immediately sees how routine photos look!
+      const cuteRoutineSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="760" height="500" viewBox="0 0 760 500">
+          <rect width="760" height="500" fill="#FFF9F2"/>
+          <rect x="20" y="20" width="720" height="460" rx="22" fill="#FFFFFF" stroke="#EBC5D1" stroke-width="3"/>
+          <rect x="20" y="20" width="720" height="62" rx="22" fill="#F5DDE4"/>
+          <text x="46" y="58" font-family="Georgia, serif" font-size="26" fill="#465343">My Cozy Morning &amp; Study Routine</text>
+          <g font-family="sans-serif" font-size="15" fill="#49433F">
+            <rect x="46" y="106" width="668" height="52" rx="12" fill="#F7FAF6" stroke="#A9B99D"/>
+            <text x="68" y="137" font-weight="bold" fill="#465343">08:00 AM</text>
+            <text x="175" y="137">Matcha latte, open window, check top 3 goals</text>
+            <rect x="46" y="174" width="668" height="52" rx="12" fill="#FFFDF9" stroke="#E6DDD0"/>
+            <text x="68" y="205" font-weight="bold" fill="#465343">09:00 AM</text>
+            <text x="175" y="205">Deep Study Block I — Lecture notes &amp; problem sets</text>
+            <rect x="46" y="242" width="668" height="52" rx="12" fill="#F7FAF6" stroke="#A9B99D"/>
+            <text x="68" y="273" font-weight="bold" fill="#465343">01:30 PM</text>
+            <text x="175" y="273">Afternoon classes &amp; library reading corner</text>
+            <rect x="46" y="310" width="668" height="52" rx="12" fill="#FFF7FA" stroke="#EBC5D1"/>
+            <text x="68" y="341" font-weight="bold" fill="#465343">07:30 PM</text>
+            <text x="175" y="341">Active recall flashcards &amp; tidy desk for tomorrow</text>
+          </g>
+          <text x="46" y="425" font-family="cursive" font-size="21" fill="#788C73">“Little by little, a little becomes a lot.”</text>
+        </svg>
+      `);
+
+      state.planners = [
+        {
+          id: 'p-1',
+          title: 'Cozy Daily Study Spread',
+          subject: 'Biology & Literature',
+          targetDate: nextWeek,
+          tint: 'pink',
+          visibility: 'PUBLIC',
+          archived: false,
+          updatedAt: today,
+          blocks: [
+            { type: 'checklist', title: 'Top 3 Priorities Today', items: [{ text: 'Annotate Chapter 4 lecture slides', done: true }, { text: 'Finish cell signaling diagram', done: false }, { text: '25-min flashcard review', done: false }] },
+            { type: 'schedule', title: 'Study Blocks', rows: [{ time: '09:00 AM', label: 'Cell Biology Deep Focus' }, { time: '02:00 PM', label: 'Seminar Reading Notes' }] },
+            { type: 'note', title: 'Desk Note', text: 'Remember to bring highlighted printouts to Thursday seminar!' }
+          ]
+        },
+        {
+          id: 'p-2',
+          title: 'Midterm Exam Countdown',
+          subject: 'Applied Statistics',
+          targetDate: nextWeek,
+          tint: 'sage',
+          visibility: 'PUBLIC',
+          archived: false,
+          updatedAt: today,
+          blocks: [
+            { type: 'checklist', title: 'Revision Checklist', items: [{ text: 'Summarize probability distributions', done: true }, { text: 'Solve 2025 practice exam', done: false }] },
+            { type: 'note', title: 'Formula Reminder', text: 'Double check hypothesis test assumptions before calculating p-values.' }
+          ]
+        }
+      ];
+
+      state.documents = [
+        {
+          id: 'd-1',
+          title: 'Morning & Desk Routine Card',
+          category: 'Routine Photos',
+          note: 'My daily autumn semester rhythm pinned above my desk.',
+          visibility: 'PUBLIC',
+          archived: false,
+          date: today,
+          fileName: 'routine-card.svg',
+          mime: 'image/svg+xml',
+          dataUrl: cuteRoutineSvg
+        },
+        {
+          id: 'd-2',
+          title: 'Personal Advisor Meeting Notes',
+          category: 'Class Notes',
+          note: 'Private draft notes — only visible when Owner Mode is unlocked.',
+          visibility: 'PRIVATE',
+          archived: false,
+          date: today,
+          fileName: 'advisor-notes.svg',
+          mime: 'image/svg+xml',
+          dataUrl: cuteRoutineSvg
+        }
+      ];
+    }
+
+    function loadWorkspace() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.settings = { ...state.settings, ...(parsed.settings || {}) };
+          state.planners = parsed.planners || [];
+          state.documents = parsed.documents || [];
+        } else {
+          seedCuteStarterData();
+          saveWorkspace();
+        }
+        if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+          state.isOwner = true;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function saveWorkspace() {
+      try {
+        localStorage.setItem(STORE_KEY, JSON.stringify({
+          settings: state.settings,
+          planners: state.planners,
+          documents: state.documents
+        }));
+      } catch (e) {
+        toast('Browser storage full — connect Cloudflare R2 in settings for big files!', 'error');
+      }
+
+      const workerUrl = (state.settings.workerUrl || '').trim().replace(/\/$/, '');
+      if (workerUrl && state.isOwner) {
+        try {
+          await fetch(`${workerUrl}/api/sync`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${state.settings.passcode}`
+            },
+            body: JSON.stringify({
+              settings: { title: state.settings.title, tagline: state.settings.tagline, session: state.settings.session, focusNote: state.settings.focusNote },
+              planners: state.planners,
+              documents: state.documents
+            })
+          });
+        } catch {}
+      }
+    }
+
+    async function pullFromCloud(notify = false) {
+      const workerUrl = (state.settings.workerUrl || '').trim().replace(/\/$/, '');
+      if (!workerUrl) return;
+      try {
+        const headers = state.isOwner ? { 'Authorization': `Bearer ${state.settings.passcode}` } : {};
+        const res = await fetch(`${workerUrl}/api/sync`, { headers });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.empty) {
+          if (data.settings) state.settings = { ...state.settings, ...data.settings };
+          if (Array.isArray(data.planners)) state.planners = data.planners;
+          if (Array.isArray(data.documents)) state.documents = data.documents;
+          localStorage.setItem(STORE_KEY, JSON.stringify({
+            settings: state.settings,
+            planners: state.planners,
+            documents: state.documents
+          }));
+          updateTopBar();
+          if (!state.editingPlannerId) render();
+          if (notify) toast('Synced live with Cloudflare! ✨');
+        }
+      } catch {}
+    }
+
+    // Live cross-tab sync
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORE_KEY) {
+        loadWorkspace();
+        updateTopBar();
+        if (!state.editingPlannerId) render();
+      }
+    });
+
+    // =========================================================================
+    // 4. HELPERS & NAVIGATION
+    // =========================================================================
+    const esc = (s) => String(s ?? '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    function toast(msg, type = 'ok') {
+      const box = document.getElementById('toast-box');
+      const el = document.createElement('div');
+      el.className = `px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium shadow-paper border transition-all duration-300 ${
+        type === 'error' ? 'bg-[#7A3E48] text-white border-[#5C2B33]' : 'bg-dark-olive text-white border-muted-green'
+      }`;
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }, 2800);
+    }
+
+    function openModal(html) {
+      const root = document.getElementById('modal-root');
+      root.innerHTML = html;
+      root.classList.remove('hidden');
+      root.classList.add('flex');
+    }
+
+    function closeModal() {
+      const root = document.getElementById('modal-root');
+      root.classList.add('hidden');
+      root.classList.remove('flex');
+      root.innerHTML = '';
+    }
+
+    function go(tab) {
+      state.tab = tab;
+      state.editingPlannerId = null;
+      state.viewingPlannerId = null;
+      updateTopBar();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateTopBar() {
+      document.getElementById('header-title').textContent = state.settings.title;
+      document.getElementById('header-tagline').textContent = state.settings.tagline;
+
+      const pillBtn = document.getElementById('owner-pill-btn');
+      const pillIcon = document.getElementById('owner-pill-icon');
+      const pillText = document.getElementById('owner-pill-text');
+      const gearBtn = document.getElementById('gear-btn');
+
+      if (state.isOwner) {
+        pillBtn.className = 'px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all shadow-xs bg-dark-olive hover:bg-muted-green text-white';
+        pillIcon.textContent = '✨';
+        pillText.textContent = 'Owner Unlocked';
+        gearBtn.classList.remove('hidden');
+      } else {
+        pillBtn.className = 'px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all shadow-xs bg-soft-pink/85 hover:bg-soft-pink border border-blush text-dark-olive';
+        pillIcon.textContent = '🔒';
+        pillText.textContent = 'Owner Mode';
+        gearBtn.classList.add('hidden');
+      }
+
+      document.querySelectorAll('.tab-pill').forEach(b => {
+        const active = b.dataset.tab === state.tab;
+        b.className = `tab-pill px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+          active ? 'bg-soft-pink text-dark-olive font-semibold shadow-2xs' : 'text-warm-brown hover:text-dark-olive'
+        }`;
+      });
+      document.querySelectorAll('.tab-pill-m').forEach(b => {
+        const active = b.dataset.tab === state.tab;
+        b.className = `tab-pill-m flex flex-col items-center py-1 px-3 rounded-2xl text-xs font-medium ${
+          active ? 'bg-soft-pink/80 text-dark-olive font-semibold' : 'text-warm-brown'
+        }`;
+      });
+    }
+
+    // =========================================================================
+    // 5. SUPER SIMPLE OWNER UNLOCK (1-Click Demo Helper + Passcode)
+    // =========================================================================
+    function handleOwnerPill() {
+      if (state.isOwner) {
+        state.isOwner = false;
+        state.editingPlannerId = null;
+        sessionStorage.removeItem(AUTH_KEY);
+        updateTopBar();
+        render();
+        toast('Switched to Public Visitor view');
+      } else {
+        openModal(`
+          <div class="bg-[#FFFDF9] border border-blush rounded-3xl max-w-sm w-full overflow-hidden shadow-paper-hover">
+            <div class="h-2 w-full awning-stripes"></div>
+            <div class="p-6 text-center space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-soft-pink mx-auto flex items-center justify-center text-xl">🎀</div>
+              <div>
+                <h2 class="font-serif text-3xl text-dark-olive">Unlock Owner Mode</h2>
+                <p class="text-xs text-warm-brown mt-1">Enter your passcode to add planners, upload photos, and edit your Study Nook.</p>
+              </div>
+              <form onsubmit="submitUnlock(event)" class="space-y-3 text-left">
+                <input id="unlock-pass" type="password" value="${esc(state.settings.passcode)}" placeholder="Enter passcode..."
+                  class="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DFD5CA] text-sm text-center focus:outline-none focus:border-muted-green" />
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-dark-olive hover:bg-muted-green text-white text-sm font-semibold transition-colors">
+                  Unlock My Desk ✨
+                </button>
+              </form>
+              <p class="text-[11px] text-warm-brown">Default passcode is pre-filled (<code class="bg-cream px-1.5 py-0.5 rounded">${esc(state.settings.passcode)}</code>) so you can jump right in!</p>
+              <button onclick="closeModal()" class="text-xs text-warm-brown hover:underline">Stay in Public View</button>
+            </div>
+          </div>
+        `);
+      }
+    }
+
+    function submitUnlock(e) {
+      e.preventDefault();
+      const val = document.getElementById('unlock-pass')?.value || '';
+      if (val === state.settings.passcode) {
+        state.isOwner = true;
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        closeModal();
+        updateTopBar();
+        render();
+        toast('Owner Mode unlocked! You can now add & edit everything ✨');
+      } else {
+        toast('Wrong passcode — try ' + state.settings.passcode, 'error');
+      }
+    }
+
+    function visiblePlanners(archived = false) {
+      return state.planners.filter(p => Boolean(p.archived) === archived && (state.isOwner || p.visibility === 'PUBLIC'));
+    }
+
+    function visibleDocs(archived = false) {
+      return state.documents.filter(d => Boolean(d.archived) === archived && (state.isOwner || d.visibility === 'PUBLIC'));
+    }
+
+    // =========================================================================
+    // 6. VIEW ROUTER
+    // =========================================================================
+    function render() {
+      const root = document.getElementById('view-root');
+      if (state.tab === 'home') root.innerHTML = viewHome();
+      else if (state.tab === 'planners') root.innerHTML = viewPlanners();
+      else if (state.tab === 'binder') root.innerHTML = viewBinder();
+      else if (state.tab === 'archive') root.innerHTML = viewArchive();
+    }
+
+    // =========================================================================
+    // 7. HOME VIEW — SHORT, CUTE & ACTIONABLE
+    // =========================================================================
+    function viewHome() {
+      const planners = visiblePlanners(false);
+      const docs = visibleDocs(false);
+      const archivedTotal = visiblePlanners(true).length + visibleDocs(true).length;
+
+      return `
+        <div class="space-y-8">
+          <!-- Cozy Welcome Card -->
+          <section class="bg-[#FFFDF9] border border-[#E6DDD0] rounded-3xl p-6 sm:p-8 shadow-paper relative overflow-hidden">
+            <div class="h-2 w-full awning-stripes-pastel absolute top-0 inset-x-0"></div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-2">
+              <div class="space-y-2 max-w-xl">
+                <span class="inline-block px-3 py-1 rounded-full bg-soft-pink/75 border border-blush text-xs font-semibold text-dark-olive">
+                  ✦ ${esc(state.settings.session)}
+                </span>
+                <h1 class="font-serif text-4xl sm:text-5xl text-dark-olive leading-tight">
+                  ${state.isOwner ? 'Welcome to your desk! ☕' : `Welcome to ${esc(state.settings.title)} 🌿`}
+                </h1>
+                <p class="text-sm sm:text-base text-warm-brown">
+                  ${state.isOwner
+                    ? 'Create a cute study planner, drop in routine photos or PDFs, and share your public page with one link.'
+                    : 'Browse published study planners, revision checklists, and routine cards.'}
+                </p>
+              </div>
+
+              <!-- Editable / Pinned Focus Sticky Note -->
+              <div class="w-full md:w-72 bg-[#FFF7FA] border border-blush rounded-2xl p-4 washi-pink shrink-0">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-hand text-xl text-dark-olive">Today's Study Focus</span>
+                  <span class="text-xs">🎀</span>
+                </div>
+                ${state.isOwner ? `
+                  <textarea rows="2" onchange="state.settings.focusNote = this.value; saveWorkspace(); toast('Focus note saved!')"
+                    class="w-full bg-white/80 border border-blush/70 rounded-xl p-2 text-xs text-ink focus:outline-none focus:border-muted-green">${esc(state.settings.focusNote)}</textarea>
+                ` : `
+                  <p class="text-xs text-ink leading-relaxed">${esc(state.settings.focusNote)}</p>
+                `}
+              </div>
+            </div>
+
+            <!-- 3 Big Fun Quick-Action Cards -->
+            <div class="mt-6 pt-6 border-t border-[#EFE7DE] grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              ${state.isOwner ? `
+                <button onclick="openTemplatePicker()" class="p-4 rounded-2xl bg-dark-olive hover:bg-muted-green text-white text-left transition-all shadow-xs flex items-center justify-between group">
+                  <div>
+                    <span class="text-xs opacity-80 block">1-Click Template</span>
+                    <span class="font-serif text-2xl">+ New Study Planner</span>
+                  </div>
+                  <span class="text-2xl group-hover:scale-110 transition-transform">📖</span>
+                </button>
+                <button onclick="openQuickUpload()" class="p-4 rounded-2xl bg-soft-pink/85 hover:bg-soft-pink border border-blush text-dark-olive text-left transition-all flex items-center justify-between group">
+                  <div>
+                    <span class="text-xs text-warm-brown block">Images &amp; PDFs</span>
+                    <span class="font-serif text-2xl">+ Add to Binder</span>
+                  </div>
+                  <span class="text-2xl group-hover:scale-110 transition-transform">📸</span>
+                </button>
+              ` : `
+                <button onclick="go('planners')" class="p-4 rounded-2xl bg-dark-olive hover:bg-muted-green text-white text-left transition-all shadow-xs flex items-center justify-between">
+                  <div>
+                    <span class="text-xs opacity-80 block">${planners.length} Published</span>
+                    <span class="font-serif text-2xl">Browse Planners</span>
+                  </div>
+                  <span class="text-2xl">📖</span>
+                </button>
+                <button onclick="go('binder')" class="p-4 rounded-2xl bg-soft-pink/85 hover:bg-soft-pink border border-blush text-dark-olive text-left transition-all flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-warm-brown block">${docs.length} Shared Files</span>
+                    <span class="font-serif text-2xl">Open Study Binder</span>
+                  </div>
+                  <span class="text-2xl">🎀</span>
+                </button>
+              `}
+              <button onclick="go('archive')" class="p-4 rounded-2xl bg-white hover:bg-cream border border-[#E5DCD2] text-dark-olive text-left transition-all flex items-center justify-between">
+                <div>
+                  <span class="text-xs text-warm-brown block">${archivedTotal} Saved Items</span>
+                  <span class="font-serif text-2xl">Academic Archive</span>
+                </div>
+                <span class="text-2xl">🌿</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Recent Planners & Binder Preview (Clean 2-Column) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Recent Planners -->
+            <section class="bg-white border border-[#E6DDD0] rounded-3xl p-6 shadow-paper space-y-4">
+              <div class="flex items-center justify-between">
+                <h2 class="font-serif text-2xl text-dark-olive">Recent Planners</h2>
+                <button onclick="go('planners')" class="text-xs font-semibold text-muted-green hover:underline">See all (${planners.length}) →</button>
+              </div>
+              ${planners.length ? `
+                <div class="space-y-2.5">
+                  ${planners.slice(0, 3).map(p => `
+                    <div onclick="openPlanner('${esc(p.id)}')" class="p-3.5 rounded-2xl border cursor-pointer hover:shadow-xs transition-all tint-${p.tint || 'cream'} flex items-center justify-between gap-3">
+                      <div class="min-w-0">
+                        <h3 class="font-serif text-xl text-dark-olive truncate">${esc(p.title)}</h3>
+                        <span class="text-xs text-warm-brown">${esc(p.subject || 'General Study')} ${p.targetDate ? '• Target: ' + esc(p.targetDate) : ''}</span>
+                      </div>
+                      <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/90 border border-[#E5DCD2] text-dark-olive shrink-0">Open →</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : `<p class="text-sm text-warm-brown py-4">No planners yet — click "+ New Study Planner" above!</p>`}
+            </section>
+
+            <!-- Recent Binder Files -->
+            <section class="bg-white border border-[#E6DDD0] rounded-3xl p-6 shadow-paper space-y-4">
+              <div class="flex items-center justify-between">
+                <h2 class="font-serif text-2xl text-dark-olive">Study Binder</h2>
+                <button onclick="go('binder')" class="text-xs font-semibold text-muted-green hover:underline">Open binder (${docs.length}) →</button>
+              </div>
+              ${docs.length ? `
+                <div class="space-y-2.5">
+                  ${docs.slice(0, 3).map(d => `
+                    <div onclick="previewDoc('${esc(d.id)}')" class="p-3.5 rounded-2xl bg-cream/70 border border-[#EAE0D5] hover:border-blush cursor-pointer transition-all flex items-center justify-between gap-3">
+                      <div class="min-w-0">
+                        <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-soft-pink/70 text-dark-olive">${esc(d.category)}</span>
+                        <h3 class="font-serif text-xl text-dark-olive truncate mt-0.5">${esc(d.title)}</h3>
+                      </div>
+                      <span class="text-xs font-semibold text-muted-green shrink-0">View</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : `<p class="text-sm text-warm-brown py-4">Your binder is empty — drop in routine photos or PDFs!</p>`}
+            </section>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 8. PLANNERS VIEW — 5 CUTE TEMPLATES + INLINE CLICK-TO-TYPE EDITOR
+    // =========================================================================
+    function openPlanner(id) {
+      state.tab = 'planners';
+      if (state.isOwner) {
+        state.editingPlannerId = id;
+        state.viewingPlannerId = null;
+      } else {
+        state.viewingPlannerId = id;
+        state.editingPlannerId = null;
+      }
+      updateTopBar();
+      render();
+    }
+
+    function openTemplatePicker() {
+      if (!state.isOwner) { handleOwnerPill(); return; }
+      openModal(`
+        <div class="bg-[#FFFDF9] border border-blush rounded-3xl max-w-2xl w-full overflow-hidden shadow-paper-hover">
+          <div class="h-2.5 w-full awning-stripes-pastel"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h2 class="font-serif text-3xl text-dark-olive">Pick a Cute Starter Page</h2>
+                <p class="text-xs text-warm-brown">Click any layout to open it right away and start typing.</p>
+              </div>
+              <button onclick="closeModal()" class="p-2 rounded-xl hover:bg-cream text-warm-brown">✕</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              ${STARTER_TEMPLATES.map(t => `
+                <button onclick="createFromStarter('${t.id}')"
+                  class="p-4 rounded-2xl border text-left hover:shadow-paper transition-all tint-${t.tint} flex items-start gap-3">
+                  <span class="text-2xl shrink-0">${t.emoji}</span>
+                  <div>
+                    <h3 class="font-serif text-xl text-dark-olive">${esc(t.name)}</h3>
+                    <p class="text-xs text-warm-brown mt-0.5">${esc(t.desc)}</p>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `);
+    }
+
+    function createFromStarter(tplId) {
+      const tpl = STARTER_TEMPLATES.find(t => t.id === tplId) || STARTER_TEMPLATES[0];
+      const today = new Date().toISOString().slice(0, 10);
+      const item = {
+        id: 'p-' + Date.now(),
+        title: tpl.name,
+        subject: '',
+        targetDate: '',
+        tint: tpl.tint,
+        visibility: 'PUBLIC', // Public by default
+        archived: false,
+        updatedAt: today,
+        blocks: JSON.parse(JSON.stringify(tpl.blocks))
+      };
+      state.planners.unshift(item);
+      saveWorkspace();
+      closeModal();
+      openPlanner(item.id);
+      toast('Created! Click anywhere to edit ✨');
+    }
+
+    function viewPlanners() {
+      if (state.editingPlannerId && state.isOwner) return renderPlannerEditor();
+      if (state.viewingPlannerId) return renderPlannerReader();
+
+      let list = visiblePlanners(false);
+      if (state.plannerSearch.trim()) {
+        const q = state.plannerSearch.toLowerCase();
+        list = list.filter(p => p.title.toLowerCase().includes(q) || (p.subject || '').toLowerCase().includes(q));
+      }
+
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h1 class="font-serif text-4xl text-dark-olive">Study Planners 📖</h1>
+              <p class="text-sm text-warm-brown">Your personal study spreads, checklists, and exam countdowns.</p>
+            </div>
+            ${state.isOwner ? `
+              <button onclick="openTemplatePicker()" class="px-5 py-2.5 rounded-full bg-dark-olive hover:bg-muted-green text-white text-sm font-semibold shadow-xs self-start">
+                + New Planner
+              </button>
+            ` : ''}
+          </div>
+
+          <input type="search" value="${esc(state.plannerSearch)}" oninput="state.plannerSearch = this.value; render()"
+            placeholder="Search planners by title or subject..."
+            class="w-full px-4 py-2.5 rounded-2xl bg-white border border-[#E5DCD2] text-sm focus:outline-none focus:border-muted-green" />
+
+          ${list.length ? `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              ${list.map(p => `
+                <article class="rounded-3xl border p-6 shadow-paper hover:shadow-paper-hover transition-all flex flex-col justify-between tint-${p.tint || 'cream'}">
+                  <div onclick="openPlanner('${esc(p.id)}')" class="cursor-pointer">
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                      <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-white/90 border border-[#E5DCD2] text-warm-brown">
+                        ${esc(p.subject || 'Study Spread')}
+                      </span>
+                      ${state.isOwner ? `
+                        <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${p.visibility === 'PUBLIC' ? 'bg-sage/30 text-dark-olive' : 'bg-white text-warm-brown'}">
+                          ${p.visibility === 'PUBLIC' ? '🌐 Public' : '🔒 Private'}
+                        </span>
+                      ` : ''}
+                    </div>
+                    <h2 class="font-serif text-3xl text-dark-olive leading-snug">${esc(p.title)}</h2>
+                    ${p.targetDate ? `<p class="text-xs text-muted-green font-semibold mt-1">Target Date: ${esc(p.targetDate)}</p>` : ''}
+                    <p class="text-xs text-warm-brown mt-2">${(p.blocks || []).length} study blocks • Updated ${esc(p.updatedAt)}</p>
+                  </div>
+
+                  <div class="mt-5 pt-4 border-t border-black/5 flex flex-wrap items-center justify-between gap-2">
+                    <button onclick="openPlanner('${esc(p.id)}')" class="px-4 py-1.5 rounded-full bg-dark-olive text-white text-xs font-semibold">
+                      ${state.isOwner ? 'Open & Edit' : 'Read Spread'}
+                    </button>
+                    <div class="flex items-center gap-1.5">
+                      <button onclick="exportPlannerPng('${esc(p.id)}')" class="px-3 py-1.5 rounded-full bg-white border border-[#DFD5CA] text-xs font-medium text-ink hover:bg-soft-pink/40">PNG</button>
+                      <button onclick="printPlannerPdf('${esc(p.id)}')" class="px-3 py-1.5 rounded-full bg-white border border-[#DFD5CA] text-xs font-medium text-ink hover:bg-soft-pink/40">PDF</button>
+                      ${state.isOwner ? `
+                        <button onclick="toggleArchivePlanner('${esc(p.id)}', true)" class="px-3 py-1.5 rounded-full bg-white border border-[#DFD5CA] text-xs text-warm-brown">Archive</button>
+                      ` : ''}
+                    </div>
+                  </div>
+                </article>
+              `).join('')}
+            </div>
+          ` : `
+            <div class="bg-[#FFFDF9] border border-[#E6DDD0] rounded-3xl p-10 text-center">
+              <p class="font-serif text-2xl text-dark-olive">No planners here yet</p>
+              <p class="text-xs text-warm-brown mt-1">Click "+ New Planner" to start a fresh page.</p>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    // Auto-save helper
+    let saveTimer = null;
+    function autoSavePlanner(p) {
+      p.updatedAt = new Date().toISOString().slice(0, 10);
+      const badge = document.getElementById('live-save-badge');
+      if (badge) badge.textContent = 'Saving...';
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        saveWorkspace();
+        const b = document.getElementById('live-save-badge');
+        if (b) b.textContent = 'Saved ✓';
+      }, 300);
+    }
+
+    function renderPlannerEditor() {
+      const p = state.planners.find(x => x.id === state.editingPlannerId);
+      if (!p) { state.editingPlannerId = null; return viewPlanners(); }
+
+      return `
+        <div class="space-y-5">
+          <!-- Simple Top Action Pill Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-[#FFFDF9] border border-blush rounded-2xl p-3 shadow-paper">
+            <div class="flex items-center gap-2.5">
+              <button onclick="state.editingPlannerId = null; render()" class="px-3.5 py-1.5 rounded-full bg-cream hover:bg-soft-pink/60 text-xs font-semibold text-dark-olive">← Back</button>
+              <span id="live-save-badge" class="text-xs font-semibold text-muted-green bg-sage/20 px-3 py-1 rounded-full">Saved ✓</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="pToggleVis('${esc(p.id)}')" class="px-3 py-1.5 rounded-full text-xs font-semibold border ${p.visibility === 'PUBLIC' ? 'bg-sage/25 border-sage text-dark-olive' : 'bg-white border-[#DFD5CA] text-warm-brown'}">
+                ${p.visibility === 'PUBLIC' ? '🌐 Public' : '🔒 Private'}
+              </button>
+              <button onclick="exportPlannerPng('${esc(p.id)}')" class="px-3 py-1.5 rounded-full bg-soft-pink/80 border border-blush text-xs font-semibold text-dark-olive">Save PNG</button>
+              <button onclick="printPlannerPdf('${esc(p.id)}')" class="px-3 py-1.5 rounded-full bg-white border border-[#DFD5CA] text-xs font-semibold text-ink">Print PDF</button>
+              <button onclick="deletePlanner('${esc(p.id)}')" class="px-3 py-1.5 rounded-full bg-[#FFF0F3] text-[#8A3B48] text-xs font-semibold">Delete</button>
+            </div>
+          </div>
+
+          <!-- Inline Stationery Sheet -->
+          <div class="rounded-3xl border p-6 sm:p-8 shadow-paper tint-${p.tint || 'cream'} space-y-6">
+            <!-- Editable Title, Subject, Date & Paper Tint -->
+            <div class="space-y-3 pb-5 border-b border-black/10">
+              <input type="text" value="${esc(p.title)}" oninput="pField('${esc(p.id)}','title',this.value)"
+                class="w-full bg-transparent font-serif text-3xl sm:text-4xl text-dark-olive focus:outline-none border-b border-transparent focus:border-muted-green" />
+              <div class="flex flex-wrap items-center gap-2.5">
+                <input type="text" value="${esc(p.subject || '')}" oninput="pField('${esc(p.id)}','subject',this.value)"
+                  placeholder="+ Add subject (e.g. Biology)" class="px-3 py-1.5 rounded-full bg-white/90 border border-[#DFD5CA] text-xs" />
+                <input type="date" value="${esc(p.targetDate || '')}" onchange="pField('${esc(p.id)}','targetDate',this.value)"
+                  class="px-3 py-1.5 rounded-full bg-white/90 border border-[#DFD5CA] text-xs" />
+                <div class="flex items-center gap-1.5 ml-auto">
+                  <span class="text-[11px] text-warm-brown">Paper:</span>
+                  ${['cream', 'pink', 'sage'].map(t => `
+                    <button onclick="pField('${esc(p.id)}','tint','${t}'); render()"
+                      class="w-6 h-6 rounded-full border-2 ${p.tint === t ? 'border-dark-olive scale-110' : 'border-white'} ${t === 'cream' ? 'bg-[#FFF5E6]' : t === 'pink' ? 'bg-soft-pink' : 'bg-sage/60'}"></button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Editable Blocks -->
+            <div class="space-y-4">
+              ${(p.blocks || []).map((blk, bIdx) => `
+                <div class="bg-white/90 border border-[#EAE0D5] rounded-2xl p-4 sm:p-5 space-y-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <input type="text" value="${esc(blk.title)}" oninput="pBlkTitle('${esc(p.id)}',${bIdx},this.value)"
+                      class="font-serif text-2xl text-dark-olive bg-transparent focus:outline-none flex-1" />
+                    <button onclick="pRemoveBlk('${esc(p.id)}',${bIdx})" class="text-xs text-warm-brown hover:text-[#8A3B48] px-2">Remove</button>
+                  </div>
+
+                  ${blk.type === 'checklist' ? `
+                    <div class="space-y-2">
+                      ${(blk.items || []).map((it, iIdx) => `
+                        <div class="flex items-center gap-2">
+                          <input type="checkbox" ${it.done ? 'checked' : ''} onchange="pToggleItem('${esc(p.id)}',${bIdx},${iIdx})" class="w-4 h-4 accent-[#465343]" />
+                          <input type="text" value="${esc(it.text)}" oninput="pItemText('${esc(p.id)}',${bIdx},${iIdx},this.value)"
+                            class="flex-1 text-sm bg-transparent border-b border-transparent focus:border-[#DFD5CA] focus:outline-none ${it.done ? 'line-through text-warm-brown' : ''}" />
+                          <button onclick="pDelItem('${esc(p.id)}',${bIdx},${iIdx})" class="text-xs text-warm-brown">✕</button>
+                        </div>
+                      `).join('')}
+                      <button onclick="pAddItem('${esc(p.id)}',${bIdx})" class="text-xs font-semibold text-muted-green hover:text-dark-olive">+ Add checkbox</button>
+                    </div>
+                  ` : blk.type === 'schedule' ? `
+                    <div class="space-y-2">
+                      ${(blk.rows || []).map((r, rIdx) => `
+                        <div class="flex flex-col sm:flex-row gap-2">
+                          <input type="text" value="${esc(r.time)}" oninput="pRow('${esc(p.id)}',${bIdx},${rIdx},'time',this.value)" placeholder="Time"
+                            class="sm:w-32 px-3 py-1.5 rounded-xl bg-cream/70 border border-[#E5DCD2] text-xs font-semibold" />
+                          <input type="text" value="${esc(r.label)}" oninput="pRow('${esc(p.id)}',${bIdx},${rIdx},'label',this.value)" placeholder="Study activity..."
+                            class="flex-1 px-3 py-1.5 rounded-xl bg-cream/70 border border-[#E5DCD2] text-xs" />
+                          <button onclick="pDelRow('${esc(p.id)}',${bIdx},${rIdx})" class="text-xs text-warm-brown px-1">✕</button>
+                        </div>
+                      `).join('')}
+                      <button onclick="pAddRow('${esc(p.id)}',${bIdx})" class="text-xs font-semibold text-muted-green hover:text-dark-olive">+ Add time slot</button>
+                    </div>
+                  ` : `
+                    <textarea rows="3" oninput="pNote('${esc(p.id)}',${bIdx},this.value)"
+                      class="w-full p-3 rounded-xl bg-cream/60 border border-[#E5DCD2] text-sm focus:outline-none focus:border-muted-green">${esc(blk.text || '')}</textarea>
+                  `}
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- 1-Click Add Block Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+              <button onclick="pAddBlk('${esc(p.id)}','checklist')" class="px-4 py-2 rounded-full bg-white hover:bg-soft-pink/50 border border-[#DFD5CA] text-xs font-semibold text-dark-olive">+ Checklist</button>
+              <button onclick="pAddBlk('${esc(p.id)}','schedule')" class="px-4 py-2 rounded-full bg-white hover:bg-soft-pink/50 border border-[#DFD5CA] text-xs font-semibold text-dark-olive">+ Time Slots</button>
+              <button onclick="pAddBlk('${esc(p.id)}','note')" class="px-4 py-2 rounded-full bg-white hover:bg-soft-pink/50 border border-[#DFD5CA] text-xs font-semibold text-dark-olive">+ Sticky Note</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlannerReader() {
+      const p = state.planners.find(x => x.id === state.viewingPlannerId);
+      if (!p || (!state.isOwner && p.visibility !== 'PUBLIC')) { state.viewingPlannerId = null; return viewPlanners(); }
+      return `
+        <div class="space-y-5">
+          <div class="flex items-center justify-between bg-[#FFFDF9] border border-[#E6DDD0] rounded-2xl p-3">
+            <button onclick="state.viewingPlannerId = null; render()" class="px-3.5 py-1.5 rounded-full bg-cream text-xs font-semibold text-dark-olive">← All Planners</button>
+            <div class="flex gap-2">
+              <button onclick="exportPlannerPng('${esc(p.id)}')" class="px-3.5 py-1.5 rounded-full bg-soft-pink/80 border border-blush text-xs font-semibold text-dark-olive">Save PNG</button>
+              <button onclick="printPlannerPdf('${esc(p.id)}')" class="px-3.5 py-1.5 rounded-full bg-white border border-[#DFD5CA] text-xs font-semibold">Print PDF</button>
+            </div>
+          </div>
+          ${buildPrintableHtml(p)}
+        </div>
+      `;
+    }
+
+    // Planner Editor Mutations
+    function pField(id, k, v) { const p = state.planners.find(x => x.id === id); if (p) { p[k] = v; autoSavePlanner(p); } }
+    function pToggleVis(id) { const p = state.planners.find(x => x.id === id); if (p) { p.visibility = p.visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC'; autoSavePlanner(p); render(); toast(`Planner is now ${p.visibility}`); } }
+    function pBlkTitle(id, b, v) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].title = v; autoSavePlanner(p); } }
+    function pRemoveBlk(id, b) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks.splice(b, 1); autoSavePlanner(p); render(); } }
+    function pAddBlk(id, type) {
+      const p = state.planners.find(x => x.id === id); if (!p) return;
+      if (type === 'checklist') p.blocks.push({ type: 'checklist', title: 'New Checklist', items: [{ text: 'First item', done: false }] });
+      else if (type === 'schedule') p.blocks.push({ type: 'schedule', title: 'Schedule', rows: [{ time: '10:00 AM', label: 'Study block' }] });
+      else p.blocks.push({ type: 'note', title: 'Notes', text: '' });
+      autoSavePlanner(p); render();
+    }
+    function pToggleItem(id, b, i) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].items[i].done = !p.blocks[b].items[i].done; autoSavePlanner(p); render(); } }
+    function pItemText(id, b, i, v) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].items[i].text = v; autoSavePlanner(p); } }
+    function pAddItem(id, b) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].items.push({ text: '', done: false }); autoSavePlanner(p); render(); } }
+    function pDelItem(id, b, i) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].items.splice(i, 1); autoSavePlanner(p); render(); } }
+    function pRow(id, b, r, k, v) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].rows[r][k] = v; autoSavePlanner(p); } }
+    function pAddRow(id, b) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].rows.push({ time: '', label: '' }); autoSavePlanner(p); render(); } }
+    function pDelRow(id, b, r) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].rows.splice(r, 1); autoSavePlanner(p); render(); } }
+    function pNote(id, b, v) { const p = state.planners.find(x => x.id === id); if (p) { p.blocks[b].text = v; autoSavePlanner(p); } }
+
+    function toggleArchivePlanner(id, arch) {
+      const p = state.planners.find(x => x.id === id);
+      if (p) { p.archived = arch; saveWorkspace(); render(); toast(arch ? 'Moved to Archive' : 'Restored!'); }
+    }
+
+    function deletePlanner(id) {
+      openModal(`
+        <div class="bg-[#FFFDF9] border border-blush rounded-3xl max-w-xs w-full p-6 text-center space-y-4">
+          <h3 class="font-serif text-2xl text-dark-olive">Delete this planner?</h3>
+          <div class="flex justify-center gap-2">
+            <button onclick="closeModal()" class="px-4 py-2 rounded-full border border-[#DFD5CA] text-xs font-semibold">Cancel</button>
+            <button onclick="state.planners = state.planners.filter(x => x.id !== '${esc(id)}'); state.editingPlannerId = null; saveWorkspace(); closeModal(); render(); toast('Deleted');"
+              class="px-4 py-2 rounded-full bg-[#8A3B48] text-white text-xs font-semibold">Delete</button>
+          </div>
+        </div>
+      `);
+    }
+
+    // =========================================================================
+    // 9. CLEAN PDF PRINT & PNG IMAGE EXPORT
+    // =========================================================================
+    function buildPrintableHtml(p) {
+      return `
+        <div class="rounded-3xl border p-8 tint-${p.tint || 'cream'} space-y-6">
+          <div class="border-b border-black/10 pb-4 flex justify-between items-start">
+            <div>
+              <span class="text-xs uppercase font-semibold text-muted-green">${esc(p.subject || 'Study Nook')} ${p.targetDate ? '• ' + esc(p.targetDate) : ''}</span>
+              <h1 class="font-serif text-4xl text-dark-olive mt-1">${esc(p.title)}</h1>
+            </div>
+            <span class="font-hand text-xl text-warm-brown">${esc(state.settings.title)}</span>
+          </div>
+          <div class="space-y-4">
+            ${(p.blocks || []).map(blk => `
+              <div class="bg-white/95 border border-[#EAE0D5] rounded-2xl p-5">
+                <h3 class="font-serif text-2xl text-dark-olive mb-2.5">${esc(blk.title)}</h3>
+                ${blk.type === 'checklist' ? `<ul class="space-y-1.5 text-sm">${(blk.items || []).map(i => `<li>${i.done ? '☑' : '☐'} <span class="${i.done ? 'line-through text-warm-brown' : ''}">${esc(i.text)}</span></li>`).join('')}</ul>`
+                : blk.type === 'schedule' ? `<div class="space-y-1.5 text-sm">${(blk.rows || []).map(r => `<div class="flex gap-4"><strong class="w-28 text-dark-olive">${esc(r.time)}</strong><span>${esc(r.label)}</span></div>`).join('')}</div>`
+                : `<p class="text-sm whitespace-pre-line leading-relaxed">${esc(blk.text || '')}</p>`}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function printPlannerPdf(id) {
+      const p = state.planners.find(x => x.id === id);
+      if (!p) return;
+      const target = document.getElementById('print-sheet-target');
+      target.innerHTML = buildPrintableHtml(p);
+      target.classList.remove('hidden');
+      setTimeout(() => { window.print(); target.classList.add('hidden'); }, 150);
+    }
+
+    function exportPlannerPng(id) {
+      const p = state.planners.find(x => x.id === id);
+      if (!p) return;
+      const w = 820, scale = 2;
+      let h = 190;
+      (p.blocks || []).forEach(b => {
+        h += 65 + ((b.items?.length || b.rows?.length || (b.text || '').split('\n').length || 1) * 28);
+      });
+      const c = document.createElement('canvas');
+      c.width = w * scale; c.height = h * scale;
+      const ctx = c.getContext('2d');
+      ctx.scale(scale, scale);
+
+      const bgMap = { cream: '#FFFDF9', pink: '#FFF7FA', sage: '#F7FAF6' };
+      ctx.fillStyle = bgMap[p.tint] || '#FFFDF9';
+      ctx.fillRect(0, 0, w, h);
+
+      for (let x = 0; x < w; x += 28) {
+        ctx.fillStyle = (x / 28) % 2 === 0 ? '#A9B99D' : '#F5DDE4';
+        ctx.fillRect(x, 0, 28, 10);
+      }
+
+      ctx.fillStyle = '#788C73';
+      ctx.font = '600 12px "DM Sans", sans-serif';
+      ctx.fillText(`${(p.subject || 'STUDY NOOK').toUpperCase()} ${p.targetDate ? '• ' + p.targetDate : ''}`, 42, 52);
+
+      ctx.fillStyle = '#465343';
+      ctx.font = '34px "Instrument Serif", Georgia, serif';
+      ctx.fillText(p.title, 42, 92);
+
+      let y = 135;
+      (p.blocks || []).forEach(b => {
+        ctx.fillStyle = '#465343';
+        ctx.font = '22px "Instrument Serif", Georgia, serif';
+        ctx.fillText(b.title, 42, y);
+        y += 26;
+        ctx.font = '14px "DM Sans", sans-serif';
+        ctx.fillStyle = '#49433F';
+        if (b.type === 'checklist') {
+          (b.items || []).forEach(it => { ctx.fillText(`${it.done ? '☑' : '☐'}  ${it.text}`, 48, y); y += 26; });
+        } else if (b.type === 'schedule') {
+          (b.rows || []).forEach(r => { ctx.fillText(`${r.time}   —   ${r.label}`, 48, y); y += 26; });
+        } else {
+          (b.text || '').split('\n').forEach(line => { ctx.fillText(line, 48, y); y += 24; });
+        }
+        y += 22;
+      });
+
+      const a = document.createElement('a');
+      a.download = `${p.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`;
+      a.href = c.toDataURL('image/png');
+      a.click();
+      toast('Saved cute PNG image! ✨');
+    }
+
+    // =========================================================================
+    // 10. BINDER VIEW — EASY DRAG & DROP / CLICK UPLOAD FOR PHOTOS & PDFS
+    // =========================================================================
+    function openQuickUpload() {
+      if (!state.isOwner) { handleOwnerPill(); return; }
+      openModal(`
+        <div class="bg-[#FFFDF9] border border-blush rounded-3xl max-w-md w-full overflow-hidden shadow-paper-hover">
+          <div class="h-2.5 w-full awning-stripes-pastel"></div>
+          <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="font-serif text-3xl text-dark-olive">Add to Binder 📸</h2>
+              <button onclick="closeModal()" class="p-1.5 text-warm-brown">✕</button>
+            </div>
+            <form onsubmit="submitQuickUpload(event)" class="space-y-3.5">
+              <label class="block border-2 border-dashed border-blush hover:border-muted-green rounded-2xl p-6 text-center bg-cream/60 cursor-pointer transition-colors">
+                <span class="text-2xl block mb-1">🎀</span>
+                <span id="file-pick-label" class="text-xs font-semibold text-dark-olive block">Click to pick an image (JPG, PNG, WEBP) or PDF</span>
+                <input id="quick-file-input" type="file" required accept=".jpg,.jpeg,.png,.webp,.pdf,image/*,application/pdf"
+                  onchange="document.getElementById('file-pick-label').textContent = this.files[0]?.name || 'File selected'" class="hidden" />
+              </label>
+
+              <input id="quick-doc-title" type="text" required placeholder="Title (e.g. Morning Study Routine)"
+                class="w-full px-4 py-2.5 rounded-xl bg-white border border-[#DFD5CA] text-sm" />
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <select id="quick-doc-cat" class="px-3.5 py-2.5 rounded-xl bg-white border border-[#DFD5CA] text-xs font-medium">
+                  ${BINDER_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('')}
+                </select>
+                <select id="quick-doc-vis" class="px-3.5 py-2.5 rounded-xl bg-white border border-[#DFD5CA] text-xs font-medium">
+                  <option value="PRIVATE" selected>🔒 Private (Default)</option>
+                  <option value="PUBLIC">🌐 Public</option>
+                </select>
+              </div>
+
+              <input id="quick-doc-note" type="text" placeholder="Optional short note..."
+                class="w-full px-4 py-2 rounded-xl bg-white border border-[#DFD5CA] text-xs" />
+
+              <button id="quick-up-btn" type="submit" class="w-full py-2.5 rounded-full bg-dark-olive hover:bg-muted-green text-white text-sm font-semibold">
+                Save to Study Binder ✨
+              </button>
+            </form>
+          </div>
+        </div>
+      `);
+    }
+
+    async function submitQuickUpload(e) {
+      e.preventDefault();
+      const file = document.getElementById('quick-file-input')?.files?.[0];
+      if (!file) return;
+      const btn = document.getElementById('quick-up-btn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+
+      let dataUrl = '';
+      const workerUrl = (state.settings.workerUrl || '').trim().replace(/\/$/, '');
+      if (workerUrl) {
+        try {
+          const fd = new FormData();
+          fd.append('file', file);
+          const res = await fetch(`${workerUrl}/api/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${state.settings.passcode}` },
+            body: fd
+          });
+          const meta = await res.json();
+          dataUrl = meta.url || '';
+        } catch {}
+      }
+      if (!dataUrl) {
+        dataUrl = await new Promise(r => {
+          const fr = new FileReader();
+          fr.onload = () => r(fr.result);
+          fr.readAsDataURL(file);
+        });
+      }
+
+      const doc = {
+        id: 'd-' + Date.now(),
+        title: document.getElementById('quick-doc-title')?.value.trim() || file.name,
+        category: document.getElementById('quick-doc-cat')?.value || 'Other',
+        visibility: document.getElementById('quick-doc-vis')?.value || 'PRIVATE',
+        note: document.getElementById('quick-doc-note')?.value.trim() || '',
+        archived: false,
+        date: new Date().toISOString().slice(0, 10),
+        fileName: file.name,
+        mime: file.type,
+        dataUrl
+      };
+
+      state.documents.unshift(doc);
+      await saveWorkspace();
+      closeModal();
+      state.tab = 'binder';
+      updateTopBar();
+      render();
+      toast(`Added "${doc.title}" (${doc.visibility})!`);
+    }
+
+    function viewBinder() {
+      let list = visibleDocs(false);
+      if (state.binderCategory !== 'ALL') list = list.filter(d => d.category === state.binderCategory);
+      if (state.binderSearch.trim()) {
+        const q = state.binderSearch.toLowerCase();
+        list = list.filter(d => d.title.toLowerCase().includes(q) || (d.note || '').toLowerCase().includes(q));
+      }
+
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h1 class="font-serif text-4xl text-dark-olive">Digital Study Binder 🎀</h1>
+              <p class="text-sm text-warm-brown">Routine photos, class schedules, syllabi, and PDFs.</p>
+            </div>
+            ${state.isOwner ? `
+              <button onclick="openQuickUpload()" class="px-5 py-2.5 rounded-full bg-dark-olive hover:bg-muted-green text-white text-sm font-semibold shadow-xs self-start">
+                + Upload Photo / PDF
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input type="search" value="${esc(state.binderSearch)}" oninput="state.binderSearch = this.value; render()"
+              placeholder="Search binder..."
+              class="flex-1 px-4 py-2.5 rounded-2xl bg-white border border-[#E5DCD2] text-sm focus:outline-none focus:border-muted-green" />
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+              ${['ALL', ...BINDER_CATEGORIES].map(cat => `
+                <button onclick="state.binderCategory = '${cat}'; render()"
+                  class="px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap ${state.binderCategory === cat ? 'bg-dark-olive text-white' : 'bg-white border border-[#E5DCD2] text-warm-brown'}">
+                  ${cat === 'ALL' ? 'All' : cat}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          ${list.length ? `
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              ${list.map(d => {
+                const isPdf = d.mime === 'application/pdf';
+                return `
+                  <article class="bg-white border border-[#E6DDD0] rounded-3xl overflow-hidden shadow-paper hover:shadow-paper-hover transition-all flex flex-col justify-between">
+                    <div onclick="previewDoc('${esc(d.id)}')" class="cursor-pointer">
+                      <div class="h-44 bg-cream relative flex items-center justify-center overflow-hidden border-b border-[#EFE7DE]">
+                        ${!isPdf && d.dataUrl ? `<img src="${esc(d.dataUrl)}" alt="${esc(d.title)}" class="w-full h-full object-cover" />`
+                        : `<div class="text-center"><span class="px-3 py-1 rounded-xl bg-soft-pink text-dark-olive font-serif text-xl">PDF</span><span class="text-xs text-warm-brown block mt-1.5">${esc(d.fileName)}</span></div>`}
+                        <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-white/95 text-[11px] font-semibold text-dark-olive">${esc(d.category)}</span>
+                      </div>
+                      <div class="p-5">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                          <span class="text-[11px] text-warm-brown">${esc(d.date)}</span>
+                          ${state.isOwner ? `
+                            <button onclick="event.stopPropagation(); toggleDocVis('${esc(d.id)}')"
+                              class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${d.visibility === 'PUBLIC' ? 'bg-sage/30 text-dark-olive' : 'bg-cream text-warm-brown'}">
+                              ${d.visibility === 'PUBLIC' ? '🌐 Public' : '🔒 Private'}
+                            </button>
+                          ` : ''}
+                        </div>
+                        <h3 class="font-serif text-2xl text-dark-olive leading-snug">${esc(d.title)}</h3>
+                        ${d.note ? `<p class="text-xs text-warm-brown mt-1 line-clamp-2">${esc(d.note)}</p>` : ''}
+                      </div>
+                    </div>
+                    <div class="px-5 py-3 bg-cream/60 border-t border-[#EFE7DE] flex items-center justify-between">
+                      <button onclick="previewDoc('${esc(d.id)}')" class="text-xs font-semibold text-dark-olive hover:underline">Open Preview</button>
+                      ${state.isOwner ? `<button onclick="toggleArchiveDoc('${esc(d.id)}', true)" class="text-xs text-warm-brown hover:text-dark-olive">Archive</button>` : ''}
+                    </div>
+                  </article>
+                `;
+              }).join('')}
+            </div>
+          ` : `
+            <div class="bg-[#FFFDF9] border border-[#E6DDD0] rounded-3xl p-10 text-center">
+              <p class="font-serif text-2xl text-dark-olive">No files in this folder yet</p>
+              <p class="text-xs text-warm-brown mt-1">Upload routine photos, class schedules, or PDFs anytime.</p>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function toggleDocVis(id) {
+      const d = state.documents.find(x => x.id === id);
+      if (d) { d.visibility = d.visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC'; saveWorkspace(); render(); toast(`Document is now ${d.visibility}`); }
+    }
+
+    function toggleArchiveDoc(id, arch) {
+      const d = state.documents.find(x => x.id === id);
+      if (d) { d.archived = arch; saveWorkspace(); render(); toast(arch ? 'Moved to Archive' : 'Restored!'); }
+    }
+
+    function previewDoc(id) {
+      const d = state.documents.find(x => x.id === id);
+      if (!d || (!state.isOwner && d.visibility !== 'PUBLIC')) return;
+      const isPdf = d.mime === 'application/pdf';
+      openModal(`
+        <div class="bg-[#FFFDF9] border border-blush rounded-3xl max-w-3xl w-full overflow-hidden shadow-paper-hover">
+          <div class="px-5 py-3.5 bg-cream border-b border-[#E6DDD0] flex items-center justify-between gap-2">
+            <h3 class="font-serif text-2xl text-dark-olive truncate">${esc(d.title)}</h3>
+            <div class="flex items-center gap-2 shrink-0">
+              <a href="${esc(d.dataUrl)}" download="${esc(d.fileName || 'study-file')}" class="px-3.5 py-1.5 rounded-full bg-dark-olive text-white text-xs font-semibold">Download</a>
+              <button onclick="closeModal()" class="p-1.5 text-warm-brown">✕</button>
+            </div>
+          </div>
+          <div class="p-4 bg-[#F5EDE4] flex items-center justify-center max-h-[75vh] overflow-auto">
+            ${isPdf ? `<iframe src="${esc(d.dataUrl)}" class="w-full h-[65vh] rounded-xl bg-white"></iframe>`
+              : `<img src="${esc(d.dataUrl)}" alt="${esc(d.title)}" class="max-h-[68vh] rounded-xl shadow-paper" />`}
+          </div>
+        </div>
+      `);
+    }
+
+    // =========================================================================
+    // 11. ARCHIVE VIEW — CLEAN & SIMPLE
+    // =========================================================================
+    function viewArchive() {
+      const pList = visiblePlanners(true);
+      const dList = visibleDocs(true);
+
+      return `
+        <div class="space-y-6">
+          <div>
+            <h1 class="font-serif text-4xl text-dark-olive">Academic Archive 🌿</h1>
+            <p class="text-sm text-warm-brown">Past planners and saved documents kept safe and tidy.</p>
+          </div>
+
+          ${pList.length + dList.length ? `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${pList.map(p => `
+                <div class="bg-white border border-[#E6DDD0] rounded-3xl p-5 shadow-paper flex items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-sage/25 text-dark-olive">Planner</span>
+                    <h3 class="font-serif text-2xl text-dark-olive truncate mt-1">${esc(p.title)}</h3>
+                  </div>
+                  ${state.isOwner ? `
+                    <div class="flex gap-1.5 shrink-0">
+                      <button onclick="toggleArchivePlanner('${esc(p.id)}', false)" class="px-3 py-1.5 rounded-full bg-sage/25 text-dark-olive text-xs font-semibold">Restore</button>
+                      <button onclick="state.planners = state.planners.filter(x => x.id !== '${esc(p.id)}'); saveWorkspace(); render(); toast('Removed')" class="px-3 py-1.5 rounded-full bg-[#FFF0F3] text-[#8A3B48] text-xs font-semibold">Delete</button>
+                    </div>
+                  ` : ''}
+                </div>
+              `).join('')}
+
+              ${dList.map(d => `
+                <div class="bg-white border border-[#E6DDD0] rounded-3xl p-5 shadow-paper flex items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-soft-pink/75 text-dark-olive">${esc(d.category)}</span>
+                    <h3 class="font-serif text-2xl text-dark-olive truncate mt-1">${esc(d.title)}</h3>
+                  </div>
+                  ${state.isOwner ? `
+                    <div class="flex gap-1.5 shrink-0">
+                      <button onclick="toggleArchiveDoc('${esc(d.id)}', false)" class="px-3 py-1.5 rounded-full bg-sage/25 text-dark-olive text-xs font-semibold">Restore</button>
+                      <button onclick="state.documents = state.documents.filter(x => x.id !== '${esc(d.id)}'); saveWorkspace(); render(); toast('Removed')" class="px-3 py-1.5 rounded-full bg-[#FFF0F3] text-[#8A3B48] text-xs font-semibold">Delete</button>
+                    </div>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : `
+            <div class="bg-[#FFFDF9] border border-[#E6DDD0] rounded-3xl p-10 text-center">
+              <p class="font-serif text-2xl text-dark-olive">Archive is empty ✨</p>
+              <p class="text-xs text-warm-brown mt-1">Finished planners and old notes you archive will appear here.</p>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 12. COMPACT OWNER SETTINGS & OPTIONAL CLOUDFLARE SYNC DRAWER
+    // =========================================================================
+    function openCloudDrawer() {
+      if (!state.isOwner) return;
+      openModal(`
+        <div class="bg-[#FFFDF9] border border-blush rounded-3xl max-w-xl w-full overflow-hidden shadow-paper-hover max-h-[90vh] flex flex-col">
+          <div class="h-2.5 w-full awning-stripes"></div>
+          <div class="p-6 overflow-y-auto space-y-5">
+            <div class="flex items-center justify-between">
+              <h2 class="font-serif text-3xl text-dark-olive">Study Nook Settings ⚙️</h2>
+              <button onclick="closeModal()" class="p-1.5 text-warm-brown">✕</button>
+            </div>
+
+            <form onsubmit="saveCompactSettings(event)" class="space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-warm-brown mb-1">Nook Title</label>
+                  <input id="cfg-title" type="text" value="${esc(state.settings.title)}" class="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DFD5CA] text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-warm-brown mb-1">Academic Term</label>
+                  <input id="cfg-session" type="text" value="${esc(state.settings.session)}" class="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DFD5CA] text-sm" />
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-warm-brown mb-1">Owner Passcode</label>
+                  <input id="cfg-pass" type="text" value="${esc(state.settings.passcode)}" class="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DFD5CA] text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-warm-brown mb-1">Cloudflare Worker URL (Optional)</label>
+                  <input id="cfg-worker" type="url" value="${esc(state.settings.workerUrl)}" placeholder="https://study-nook.workers.dev" class="w-full px-3.5 py-2 rounded-xl bg-white border border-[#DFD5CA] text-sm" />
+                </div>
+              </div>
+              <button type="submit" class="px-5 py-2 rounded-full bg-dark-olive text-white text-xs font-semibold">Save Settings ✨</button>
+            </form>
+
+            <!-- Collapsible Cloudflare Workers + D1 + R2 Setup for GitHub Pages -->
+            <details class="bg-cream border border-[#E5DCD2] rounded-2xl p-4">
+              <summary class="text-xs font-semibold text-dark-olive cursor-pointer">
+                ☁️ Want live cross-device sync on GitHub Pages? Click for Cloudflare Worker + D1/R2 code
+              </summary>
+              <div class="mt-3 space-y-3 text-xs text-warm-brown">
+                <p>1. Create a D1 database (<code class="bg-white px-1 rounded">DB</code>) &amp; R2 bucket (<code class="bg-white px-1 rounded">BUCKET</code>) in Cloudflare, run the SQL below, and deploy <code class="bg-white px-1 rounded">worker.js</code>:</p>
+                <div class="bg-white border border-[#DFD5CA] rounded-xl p-2.5">
+                  <div class="flex justify-between mb-1"><strong class="text-dark-olive">schema.sql</strong><button type="button" onclick="copyText('sql')" class="text-muted-green font-semibold">Copy</button></div>
+                  <pre class="text-[10px] overflow-x-auto">${esc(CLOUDFLARE_CODE.sql)}</pre>
+                </div>
+                <div class="bg-white border border-[#DFD5CA] rounded-xl p-2.5">
+                  <div class="flex justify-between mb-1"><strong class="text-dark-olive">worker.js</strong><button type="button" onclick="copyText('worker')" class="text-muted-green font-semibold">Copy</button></div>
+                  <pre class="text-[10px] overflow-x-auto max-h-40">${esc(CLOUDFLARE_CODE.worker)}</pre>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      `);
+    }
+
+    async function saveCompactSettings(e) {
+      e.preventDefault();
+      state.settings.title = document.getElementById('cfg-title')?.value.trim() || 'Study Nook';
+      state.settings.session = document.getElementById('cfg-session')?.value.trim() || 'Autumn / Fall 2026';
+      state.settings.passcode = document.getElementById('cfg-pass')?.value.trim() || 'studynook2026';
+      state.settings.workerUrl = document.getElementById('cfg-worker')?.value.trim() || '';
+      await saveWorkspace();
+      await pullFromCloud(true);
+      updateTopBar();
+      closeModal();
+      render();
+      toast('Settings saved! ✨');
+    }
+
+    function copyText(key) {
+      const ta = document.createElement('textarea');
+      ta.value = CLOUDFLARE_CODE[key] || '';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      toast('Copied to clipboard!');
+    }
+
+    // =========================================================================
+    // 13. BOOT
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadWorkspace();
+      updateTopBar();
+      render();
+      pullFromCloud(false);
+      setInterval(() => { if (state.settings.workerUrl && !state.editingPlannerId) pullFromCloud(false); }, 20000);
+    });
+  </script>
+</body>
+</html>
